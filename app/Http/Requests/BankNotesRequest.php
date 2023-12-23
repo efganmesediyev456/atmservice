@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserLoginRequest extends FormRequest
+class BankNotesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +23,11 @@ class UserLoginRequest extends FormRequest
      */
     public function rules()
     {
+        $id = $this->route('banknote');
         return [
-            'email'=>'required',
-            'password'=>'required|digits:4|numeric'
-        ];
-    }
-
-    public function messages()
-    {
-        return [
-            'name.required' => __('validation.required'),
-            'password.required' => __('validation.required')
+            'title'=>'required',
+            'price'=>'required|numeric|unique:bank_notes,price,'.$id,
+            'count'=>'required|numeric',
         ];
     }
 }

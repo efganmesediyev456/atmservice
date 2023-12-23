@@ -3,25 +3,22 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BankNotesRequest;
 use App\Models\BankNote;
 use Illuminate\Http\Request;
 
 class AdminBanknotesController extends Controller
 {
     public function index(){
-        $banknotes=BankNote::all();
+        $banknotes=BankNote::orderBy('id','desc')->get();
         return view('banknotes.index', compact('banknotes'));
     }
 
     public function create(){
         return view('banknotes.create');
     }
-    public function store(Request  $request){
-        $request->validate([
-           'title'=>'required',
-           'price'=>'required|numeric',
-           'count'=>'required|numeric',
-        ]);
+    public function store(BankNotesRequest $request){
+
         BankNote::create([
             'title'=>$request->title,
             'price'=>$request->price,
@@ -43,18 +40,12 @@ class AdminBanknotesController extends Controller
     }
 
 
-    public function update(Request  $request, $id){
-        $request->validate([
-            'title'=>'required',
-            'price'=>'required|numeric',
-            'count'=>'required|numeric',
-        ]);
+    public function update(BankNotesRequest  $request, $id){
         $banknote=BankNote::find($id);
         $banknote->title=$request->title;
         $banknote->price=$request->price;
         $banknote->count=$request->count;
         $banknote->save();
-
         return redirect()->route('banknotes.index');
     }
 

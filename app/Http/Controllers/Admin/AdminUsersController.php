@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminUserRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -15,7 +16,7 @@ class AdminUsersController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(){
-        $users=User::all();
+        $users=User::orderBy('id','desc')->get();
         return view('users.index', compact('users'));
     }
     /**
@@ -33,14 +34,8 @@ class AdminUsersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request  $request){
-//        dd($request->all());
-        $request->validate([
-            'name'=>'required',
-            'email'=>'required|email',
-            'balance'=>'required|numeric',
-            'password'=>'required|confirmed|digits:4',
-        ]);
+    public function store(AdminUserRequest  $request){
+
         User::create([
             'name'=>$request->name,
             'email'=>$request->email,
@@ -51,16 +46,7 @@ class AdminUsersController extends Controller
         return redirect()->route('users.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -82,20 +68,8 @@ class AdminUsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(AdminUserRequest $request, $id)
     {
-
-        $rules=[
-            'name'=>'required',
-            'email'=>'required|email',
-            'balance'=>'required|numeric',
-            'password'=>['confirmed'],
-        ];
-
-        if(!is_null($request->get('password'))){
-            $rules['password'][]='digits:4';
-        }
-        $request->validate($rules);
         $user=User::find($id);
         $user->update([
             'name'=>$request->name,
@@ -103,7 +77,6 @@ class AdminUsersController extends Controller
             'balance'=>$request->balance,
             'password'=>$request->password ? Hash::make($request->password) : $user->password,
         ]);
-
         return redirect()->route('users.index');
     }
 

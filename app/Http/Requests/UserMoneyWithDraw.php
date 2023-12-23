@@ -2,9 +2,10 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\CheckEnoughMoney;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserLoginRequest extends FormRequest
+class UserMoneyWithDraw extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +25,12 @@ class UserLoginRequest extends FormRequest
     public function rules()
     {
         return [
-            'email'=>'required',
-            'password'=>'required|digits:4|numeric'
+            'money'=>[
+                'required',
+                new CheckEnoughMoney(),
+                'numeric',
+            ]
         ];
     }
 
-    public function messages()
-    {
-        return [
-            'name.required' => __('validation.required'),
-            'password.required' => __('validation.required')
-        ];
-    }
 }

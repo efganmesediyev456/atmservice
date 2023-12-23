@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserMoneyWithDraw;
+use App\Http\Resources\AtmWithdrawResource;
 use App\Http\Resources\UserResource;
 use App\Models\BankNote;
 use App\Models\BankNoteLog;
@@ -21,45 +23,42 @@ class UserController extends Controller
         $this->atmservice=new AtmService();
     }
 
-
-
-    public function index(){
+    public function user(){
         return new UserResource(auth('api')->user());
     }
 
+    public function withdraw(UserMoneyWithDraw $money){
 
-
-    public function withdraw(Request $request){
-        $request->validate([
-           'money'=>'required'
-        ]);
-        $money=$request->money;
-
-
-
-        if(auth('api')->user()->balance<$money){
-            return response()->json([
-                'message'=>'there is not enough money in the account'
-            ], 422);
-        }
+        $money=$money->get('money');
 
         $banknotes=BankNote::all();
 
-        $banknotes->transform(function ($i){
+        $banknotes->transform(function ($item){
             return [
-                'count'=>$i->count,
-                'banknote'=>$i->price,
-                'id'=>$i->id
+                'count'=>$item->count,
+                'banknote'=>$item->price,
+                'id'=>$item->id
             ];
         });
+        $response=$this->atmservice->atmWithdraw($money, $banknotes->toArray());
 
-        return $this->atmservice->atmWithdraw($request->money, $banknotes->toArray());
+        if($response['success']){
+            $response=$response['withdrawnNotes'];
+            $response=array_map( function ($item){
+                return [
+                    'count'=>$item['count'],
+                    'banknote'=>$item['banknote'],
+                    'title'=>BankNote::find($item['id'])->title,
+                ] ;
+            }, $response);
 
+            return AtmWithdrawResource::make([
+                'success'=>true,
+                'money'=>$money,
+                'data'=>$response
+            ]);
+        }
 
-
-
-
+        return $response;
     }
-
-
 }

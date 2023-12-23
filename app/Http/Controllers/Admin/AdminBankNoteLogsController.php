@@ -15,7 +15,7 @@ class AdminBankNoteLogsController extends Controller
      */
     public function index()
     {
-        $banknotelogs=BankNoteLog::all();
+        $banknotelogs=BankNoteLog::orderBy('id','desc')->get();
         return view('logs.index', compact('banknotelogs'));
 
     }

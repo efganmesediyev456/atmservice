@@ -13,6 +13,9 @@ return [
     |
     */
 
+    'RECAPTCHA_KEY'=>env('RECAPTCHA_KEY','6LfpKj8lAAAAAKIb4di6f8xTFSfAeYMUphHB3uRg'),
+    'RECAPTCHA_SECRET'=>env('RECAPTCHA_SECRET','6LfpKj8lAAAAAJTmN17ZSaxI0XfTliDnJ-Cf_ci2'),
+
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

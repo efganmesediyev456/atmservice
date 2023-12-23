@@ -14,8 +14,6 @@ class AtmWithdrawResource extends JsonResource
      */
     public function toArray($request)
     {
-
-
         return [
             'success'=>$this['success'],
             'money'=>$this['money'],

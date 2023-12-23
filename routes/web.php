@@ -1,7 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use \App\Http\Controllers\Admin\AdminDashboardController;
+use \App\Http\Controllers\Admin\AdminBanknotesController;
+use \App\Http\Controllers\Admin\AdminUsersController;
+use \App\Http\Controllers\Admin\AdminBankNoteLogsController;
+use \App\Http\Controllers\Admin\AdminAuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,16 +21,19 @@ use Illuminate\Support\Facades\Route;
 
 
 
-Route::get('/admin/dashboard',[\App\Http\Controllers\Admin\AdminDashboardController::class,'home']);
-Route::resource('/admin/banknotes',\App\Http\Controllers\Admin\AdminBanknotesController::class);
-Route::resource('/admin/users',\App\Http\Controllers\Admin\AdminUsersController::class);
-Route::resource('/admin/logs',\App\Http\Controllers\Admin\AdminBankNoteLogsController::class);
+Route::group(['prefix'=>'admin','middleware'=>'auth:admin'], function (){
+    Route::get('/dashboard',[AdminDashboardController::class,'home']);
+    Route::resource('/banknotes',AdminBanknotesController::class);
+    Route::resource('/users',AdminUsersController::class);
+    Route::resource('/logs',AdminBankNoteLogsController::class);
+    Route::post('/logout',[AdminAuthController::class,'logout'])->name('admin.logout');
+});
 
 
+Route::group(['prefix'=>'admin'], function (){
+    Route::get('/login',[AdminAuthController::class,'showAdminLoginForm'])->name('admin.login-view');
+    Route::post('/login',[AdminAuthController::class,'adminLogin'])->name('admin.login');
+});
 
-
-Route::get('/admin/login',[\App\Http\Controllers\Admin\AdminAuthController::class,'showAdminLoginForm'])->name('admin.login-view');
-Route::post('/admin/login',[\App\Http\Controllers\Admin\AdminAuthController::class,'adminLogin'])->name('admin.login');
-Route::post('/admin/logout',[\App\Http\Controllers\Admin\AdminAuthController::class,'logout'])->name('admin.logout');
 
 

@@ -48,7 +48,7 @@
 
 
             grecaptcha.ready(function() {
-                grecaptcha.execute('{{env('RECAPTCHA_KEY')}}', {action: 'submit'}).then(function(token) {
+                grecaptcha.execute('{{config('app.RECAPTCHA_KEY')}}', {action: 'submit'}).then(function(token) {
                     $.ajax({
                         url:'{{route('admin.login')}}',
                         type:'post',

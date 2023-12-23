@@ -4,6 +4,8 @@
 - php artisan passport: install
 - php artisan serve
 
+create new .env file from [.env.example](.env.example)
+
 After installation, login to http://localhost:8000/admin/login.
 
 - Email: admin@gmail.com

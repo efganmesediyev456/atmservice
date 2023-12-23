@@ -31,6 +31,7 @@ class AtmService{
             $this->statusFailed($withdraw);
 
             return response()->json([
+                'success'=>false,
                 'message'=>"Please try a lower amount!"
             ]);
         }

@@ -85,12 +85,17 @@ class AdminUsersController extends Controller
     public function update(Request $request, $id)
     {
 
-        $request->validate([
+        $rules=[
             'name'=>'required',
             'email'=>'required|email',
             'balance'=>'required|numeric',
-            'password'=>'sometimes|confirmed|digits:4',
-        ]);
+            'password'=>['confirmed'],
+        ];
+
+        if(!is_null($request->get('password'))){
+            $rules['password'][]='digits:4';
+        }
+        $request->validate($rules);
         $user=User::find($id);
         $user->update([
             'name'=>$request->name,

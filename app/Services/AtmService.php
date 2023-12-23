@@ -1,7 +1,9 @@
 <?php
 namespace App\Services;
 
+use App\Models\BankNote;
 use App\Models\BankNoteLog;
+use App\Models\User;
 
 class AtmService{
 
@@ -89,4 +91,22 @@ class AtmService{
     }
 
 
+
+    public function atmRemoveBankAccount($withdraw){
+        $user=User::find(auth('api')->user()->id);
+        $user->balance-=$withdraw;
+        $user->save();
+
+    }
+
+
+
+    public function removeWithdrawFromAtm($banknotes){
+        foreach ($banknotes as $val){
+
+            $banknote=BankNote::find($val['id']);
+            $banknote->count=$banknote->count-$val['count'];
+            $banknote->save();
+        }
+    }
 }

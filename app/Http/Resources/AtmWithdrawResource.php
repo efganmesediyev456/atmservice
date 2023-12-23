@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class AtmWithdrawResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,11 +14,12 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        dd($this);
+
+
         return [
-          'name'=>$this->name,
-          'email'=>$this->email,
-          'balance'=>$this->balance,
+            'success'=>$this['success'],
+            'money'=>$this['money'],
+            'data'=>$this['data'],
         ];
     }
 }

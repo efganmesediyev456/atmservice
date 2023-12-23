@@ -1,10 +1,11 @@
+create new .env file from [.env.example](.env.example)
+
 - composer install
 - php artisan migrate
 - php artisan db:seed
 - php artisan passport: install
 - php artisan serve
 
-create new .env file from [.env.example](.env.example)
 
 After installation, login to http://localhost:8000/admin/login.
 
